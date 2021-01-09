@@ -23,6 +23,32 @@ const Op = Sequelize.Op;
 
  var Request = require("request");
 
+ /**
+ * @swagger
+ * definitions:
+ *   Cliente:
+ *     properties:
+ *       id:
+ *         type: integer
+ *       nome:
+ *         type: string
+ *       sobrenome:
+ *         type: string
+ *       idade:
+ *         type: integer
+ *       email:
+ *         type: string   
+ *       cep:
+ *         type: string   
+ *       rua:
+ *         type: string   
+ *       cpf:
+ *         type: string   
+ *       createdAt:
+ *         type: string   
+ *       updatedAt:
+ *         type: string   
+*/ 
  
 
 
@@ -46,7 +72,7 @@ const Op = Sequelize.Op;
  *            cpf:
  *              type: string  
  *            idade:
- *              type: string
+ *              type: integer
  *            email: 
  *              type: string  
  *            cep:
@@ -96,18 +122,25 @@ const Op = Sequelize.Op;
  * @swagger
  * /cliente:
  *   get:
- *     description: Get all books
+ *     description: Pesquisa de cliente por e-mail
  *     parameters:
  *      - name: email
+ *        required: true
  *        in: query
  *     responses:
  *       200:
  *         description: OK
+ *         schema:   
+ *           $ref: '#/definitions/Cliente'   
  */
 
 app.get('/cliente', function(req, resp){
+  
+    if(req.query.email == undefined)resp.status(500).send('Digite um e-mail')
+    if(req.query.email.indexOf("@") < 1 )resp.status(500).send('Digite um e-mail valido')
   Usuario.findAll({where: {email:req.query.email}}).then(usuario => resp.json(usuario));
-})
+   
+} )
 
 app.listen(app.get('port'));
 module.exports = app;
@@ -122,7 +155,7 @@ const Usuario = sequelize.define('usuarios',{
    type: Sequelize.STRING
   },
   idade:{
-    type: Sequelize.STRING
+    type: Sequelize.INTEGER
   },
   email:{
   type: Sequelize.STRING
@@ -138,6 +171,7 @@ const Usuario = sequelize.define('usuarios',{
   }
 })
 
+// Descomente essa linha para criar a tabela novamente.
 //Usuario.sync({Force:true})
 
 //swagger
