@@ -89,8 +89,24 @@ const Op = Sequelize.Op;
   var pIdade = req.body.idade;
   var pEmail= req.body.email;
   var pCpf= req.body.cpf;
-  
-  Usuario.findAll({where: {[Op.or]:[{email:pEmail},{cpf:pCpf}]}}).then(
+   
+    if(pNome.length < 1){
+        res.status(500).send("Digite um nome.")
+        return;
+    }   
+    if(pSobrenome.length < 0){
+        res.status(500).send("Digite um sobrenome")
+        return;
+    }
+    if(pIdade < 10){
+        res.status(500).send("Idade invalida")
+        return;    
+    }
+    if(pEmail.indexOf("@") < 1 ){
+        res.status(500).send('Digite um e-mail valido')
+        return; 
+    }
+    Usuario.findAll({where: {[Op.or]:[{email:pEmail},{cpf:pCpf}]}}).then(
     usuario => {
         if(usuario.length>=1){
           res.status(500).send("Email ou CPF ja cadastrado")
