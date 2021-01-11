@@ -24,6 +24,11 @@ Vá ate o console e uso o comando npm-install
 
 Em seguida va no console e npm start
 
+Vá até a linha 190 e retire o comentário da seguinte forma.
+
+ Descomente essa linha para criar a tabela novamente.
+ Usuario.sync({Force:true})
+
 
 Para acessar o swagger o endereço é : http://localhost:8080/api-docs ou http://localhost:5000/api-docs/#/default/get_cliente
 
