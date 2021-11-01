@@ -16,7 +16,7 @@ async function postCustomer(req){
         return Usuario.findAll({where: {[Op.or]:[{email:pEmail},{cpf:pCpf}]}}).then(
             async function (usuario) {
                 if(usuario.length>=1){
-                 throw new Error("Email ou CPF ja cadastrado")
+                 throw new Error(req.config.erros.allReadyRegistered)
                 }else{
                     var url = "https://viacep.com.br/ws/"+pCep+"/json/"
                     let t = await axios.get(url).then((response)=>{

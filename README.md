@@ -10,24 +10,51 @@ Link para instalação no Mac : https://dev.mysql.com/doc/mysql-installation-exc
 Link para instalação no Linux : https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/linux-installation.html
 
 
-Após a instalação inicie seu server e crie uma database chamada cliente com os comandos:
+Após a instalação abra seu mysqlworkbench inicia sua conexão e rode esse script:
 
-CREATE DATABASE cliente;
+-- ----------------------------------------------------------------------------
+-- MySQL Workbench Migration
+-- Migrated Schemata: cliente
+-- Source Schemata: cliente
+-- Created: Sun Oct 31 21:27:14 2021
+-- Workbench Version: 8.0.24
+-- ----------------------------------------------------------------------------
 
-Logo em seguida clone o repositorio da branch master e abra o arquivo app.js, na linha 15 temos o seguinte codigo de conexão com a database:
+SET FOREIGN_KEY_CHECKS = 0;
 
-var sequelize = new Sequelize('cliente', 'root', '', 
+-- ----------------------------------------------------------------------------
+-- Schema cliente
+-- ----------------------------------------------------------------------------
+DROP SCHEMA IF EXISTS `cliente` ;
+CREATE SCHEMA IF NOT EXISTS `cliente` ;
 
-Onde temos o campo 'root' e o nome de usuário que voce configurou na sua database e o campo '' que esta em branco e a senha, coloque o respectivos usuário e senha e vamos ao proximo passso.
+-- ----------------------------------------------------------------------------
+-- Table cliente.usuarios
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cliente`.`usuarios` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL DEFAULT NULL,
+  `sobrenome` VARCHAR(45) NULL DEFAULT NULL,
+  `idade` INT NULL DEFAULT NULL,
+  `email` VARCHAR(45) NULL DEFAULT NULL,
+  `cep` VARCHAR(45) NULL DEFAULT NULL,
+  `rua` VARCHAR(45) NULL DEFAULT NULL,
+  `cpf` VARCHAR(45) NULL DEFAULT NULL,
+  `createdAt` VARCHAR(45) CHARACTER SET 'utf8mb4' NULL DEFAULT NULL,
+  `updatedAt` VARCHAR(45) NULL DEFAULT NULL,
+  `deletedAt` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+SET FOREIGN_KEY_CHECKS = 1;
+
+Logo em seguida clone o repositorio da branch master e abra o config e edite os campos login e pass para seus usarios do banco de dados
 
 Vá ate o console e uso o comando npm-install
 
 Em seguida va no console e npm start
-
-Vá até a linha 190 e retire o comentário da seguinte forma.
-
- Descomente essa linha para criar a tabela novamente.
- Usuario.sync({Force:true})
 
 
 Para acessar o swagger o endereço é : http://localhost:8080/api-docs ou http://localhost:5000/api-docs/#/default/get_cliente

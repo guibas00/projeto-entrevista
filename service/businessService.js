@@ -1,5 +1,4 @@
-const config = require('../config.json')
-function validateCustomer(customer){
+function validateCustomer(customer, config){
     if(customer.nome.length < 1){
         throw new Error(config.erros.noNameException)
     }   

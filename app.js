@@ -6,6 +6,7 @@ const postCustomer = require('./controller/postCustomer.js')
 const getCustomer = require('./controller/getCustomer.js')
 const swaggerJSDoc = require('swagger-jsdoc');
 const db = require('./commons/dbConnection.js')
+const config = require('./config.json')
   
  const server = express();
  server.set('port', process.env.PORT || 8080);
@@ -15,6 +16,7 @@ const db = require('./commons/dbConnection.js')
  server.use(bodyParser.json());
  server.use(function(req,res,next){
   req.db = db;
+  req.config = config;
   next();
 })
 

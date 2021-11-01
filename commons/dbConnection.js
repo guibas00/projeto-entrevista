@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-module.exports.sequelize = new Sequelize('cliente', 'root', 'root', {
+const config = require('../config.json')
+module.exports.sequelize = new Sequelize('cliente', config.db.login, config.db.pass, {
     host: 'localhost',
     dialect: 'mysql',
   });

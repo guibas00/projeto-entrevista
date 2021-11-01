@@ -1,6 +1,11 @@
 {
     "erros": {
         "invalidCep": "Digite um CEP valido.",
-        "noNameException": "Digite um nome."
+        "noNameException": "Digite um nome.",
+        "allReadyRegistered": "Email ou CPF ja cadastrado"
+    },
+    "db":{
+        "login": "root",
+        "pass": "root"
     }
 }

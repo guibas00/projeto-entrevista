@@ -14,7 +14,7 @@ module.exports = async function(req, res){
             "sobrenome": req.body.sobrenome,
             "idade": req.body.idade,
             "email": req.body.email
-        }) 
+        }, req.cofig) 
           const response = await postCustomer(req)
           res.send(response)
       } catch (error) {
