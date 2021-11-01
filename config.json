@@ -1,0 +1,6 @@
+{
+    "erros": {
+        "invalidCep": "Digite um CEP valido.",
+        "noNameException": "Digite um nome."
+    }
+}

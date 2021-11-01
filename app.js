@@ -1,27 +1,23 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const bodyParser = require('body-parser');
-const { response } = require('express');
 const express = require('express');
-const Sequelize = require('sequelize');
+const postCustomer = require('./controller/postCustomer.js')
+const getCustomer = require('./controller/getCustomer.js')
 const swaggerJSDoc = require('swagger-jsdoc');
-const { where } = require('sequelize');
-const Op = Sequelize.Op;
+const db = require('./commons/dbConnection.js')
   
- const app = express();
- app.set('port', process.env.PORT || 8080);
- app.listen(5000,() => console.log("listening on 5000")); 
+ const server = express();
+ server.set('port', process.env.PORT || 8080);
+ server.listen(5000,() => console.log("listening on 5000")); 
+ 
+ server.use(bodyParser.urlencoded({ extended: false }));
+ server.use(bodyParser.json());
+ server.use(function(req,res,next){
+  req.db = db;
+  next();
+})
 
- var sequelize = new Sequelize('cliente', 'root', '', {
-   host: 'localhost',
-   dialect: 'mysql',
- });
-
- app.use(bodyParser.urlencoded({ extended: false }));
- app.use(bodyParser.json());
-
-
- var Request = require("request");
 
  /**
  * @swagger
@@ -50,8 +46,6 @@ const Op = Sequelize.Op;
  *         type: string   
 */ 
  
-
-
  /**
  * @swagger
  * /cliente:
@@ -81,58 +75,7 @@ const Op = Sequelize.Op;
  *       200:
  *         description: OK
  */
- app.post('/cliente', function (req, res){
-
-  var pNome = req.body.nome;
-  var pSobrenome = req.body.sobrenome;
-  var pCep = req.body.cep.replace("-","");
-  var pIdade = req.body.idade;
-  var pEmail= req.body.email;
-  var pCpf= req.body.cpf;
-   
-    if(pNome.length < 1){
-        res.status(500).send("Digite um nome.")
-        return;
-    }   
-    if(pSobrenome.length < 0){
-        res.status(500).send("Digite um sobrenome")
-        return;
-    }
-    if(pIdade < 10){
-        res.status(500).send("Idade invalida")
-        return;    
-    }
-    if(pEmail.indexOf("@") < 1 ){
-        res.status(500).send('Digite um e-mail valido')
-        return; 
-    }
-    Usuario.findAll({where: {[Op.or]:[{email:pEmail},{cpf:pCpf}]}}).then(
-    usuario => {
-        if(usuario.length>=1){
-          res.status(500).send("Email ou CPF ja cadastrado")
-        }else{
-          var url = "https://viacep.com.br/ws/"+pCep+"/json"
-          Request.get({
-                "url": url
-            }, (error, response, body) => {
-                if(error) {
-                  res.status(500).send("Digite um CEP valido.")
-                }else{
-                  try {
-                    var end =JSON.parse(body);
-                  var pRua = end.logradouro;
-                  Usuario.create({nome:pNome,sobrenome:pSobrenome,idade:pIdade,cpf:pCpf,email:pEmail,cep:pCep,rua:pRua});
-                  res.sendStatus(200)
-                  } catch (error) {
-                    res.status(500).send("Digite um CEP valido.") 
-                  }
-                
-              }   
-            });               
-        };
-      }
-    );
- });
+ server.post('/cliente', postCustomer);
 
  /**
  * @swagger
@@ -150,45 +93,9 @@ const Op = Sequelize.Op;
  *           $ref: '#/definitions/Cliente'   
  */
 
-app.get('/cliente', function(req, resp){
-  
-    if(req.query.email == undefined)resp.status(500).send('Digite um e-mail')
-    if(req.query.email.indexOf("@") < 1 )resp.status(500).send('Digite um e-mail valido')
-  Usuario.findAll({where: {email:req.query.email}}).then(usuario => resp.json(usuario));
-   
-} )
+server.get('/cliente', getCustomer )
 
-app.listen(app.get('port'));
-module.exports = app;
-
-//models
-
-const Usuario = sequelize.define('usuarios',{
-  nome:{
-    type: Sequelize.STRING
-  },
-  sobrenome:  {
-   type: Sequelize.STRING
-  },
-  idade:{
-    type: Sequelize.INTEGER
-  },
-  email:{
-  type: Sequelize.STRING
-  },
-  cep:{
-   type: Sequelize.STRING
-  },
-  rua:{
-   type: Sequelize.STRING
-  },
-  cpf:{
-    type: Sequelize.STRING
-  }
-})
-
-// Descomente essa linha para criar a tabela novamente.
-//Usuario.sync({Force:true})
+server.listen(server.get('port'));
 
 //swagger
 const swaggerOptions = {
@@ -203,4 +110,4 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+server.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
